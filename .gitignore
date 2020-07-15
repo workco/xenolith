@@ -1,0 +1,8 @@
+.vscode
+Xenolith.egg-info
+dist
+build
+.secret
+.env
+__pycache__
+venv
