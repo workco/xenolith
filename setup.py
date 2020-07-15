@@ -9,6 +9,8 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        xenolith=xenolith:init
+        init=commands.main:init
+        user=commands.user:user
+        file=commands.file:file
     ''',
 )
