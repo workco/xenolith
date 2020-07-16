@@ -1,17 +1,28 @@
 import click
 import os
+from commands import user, file
 from constant import SECRET_PATH, RECIPIENTS_FILE_NAME
 
-@click.command()
+
+@click.group()
+def cli():
+    pass
+
+
+@cli.command()
 def init():
     if os.path.exists(SECRET_PATH):
         click.echo('Project has already been initialized')
-        return 
+        return
     try:
         os.mkdir(SECRET_PATH)
-        recipients = open(SECRET_PATH + RECIPIENTS_FILE_NAME, "w")
+        recipients = open(SECRET_PATH + RECIPIENTS_FILE_NAME, 'w')
         recipients.close()
     except OSError as e:
         click.echo('There was an error creating the secret folder.\n{}'.format(e))
         return
     click.echo('.secret folder created in current directory')
+
+
+command_collection = click.CommandCollection(
+    sources=[cli, user.user, file.file])
