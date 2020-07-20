@@ -6,3 +6,5 @@ build
 .env
 __pycache__
 venv
+tests/__pycache__
+.pytest_cache
