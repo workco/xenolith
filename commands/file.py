@@ -13,6 +13,7 @@ def file():
 @file.command()
 @click.argument('file_name')
 def encrypt(file_name):
+    """Encrypts a file assuming that at least one user exists"""
     if not os.path.exists(SECRET_PATH):
         return click.echo(
             'Cannot detect a .secret folder. Run "xenolith init" to initialize xenolith')
@@ -34,12 +35,16 @@ def encrypt(file_name):
 
 
 @file.command()
-@click.argument('key')
-@click.argument('file_path')
-def decrypt(key, file_path):
+@click.argument('key_file', type=click.Path(exists=True))
+@click.argument('file_name', type=click.Path(exists=True))
+def decrypt(key_file, file_name):
+    """Decrypts a file with a given key file and file name.
+
+    - key_file: Path to a file that contains an age secret key or an SSH key file
+    - file_name: Path to the encrypted .age file"""
     try:
-        os.system('age -decrypt -i ' + key + ' ' + file_path +
-                  ' > ' + file_path.replace('.age', ''))
+        os.system('age -decrypt -i ' + key_file + ' ' + file_name +
+                  ' > ' + file_name.replace('.age', ''))
         click.echo('File has been decrypted')
     except Exception as e:
         click.echo(

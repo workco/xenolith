@@ -10,15 +10,14 @@ def user():
 
 
 @user.command()
-@click.option('--type', default='key', help='The user identification that will be added. Defaults to a public key.', type=click.Choice(['key', 'github'], case_sensitive=False))
-@click.argument('key')
-def add(type, key):
+@click.argument('recipient')
+def add(recipient):
     if not os.path.exists(SECRET_PATH):
         return click.echo(
             'Cannot detect a .secret folder. Run "xenolith init" to initialize xenolith')
     with open(SECRET_PATH + RECIPIENTS_FILE_NAME, 'a') as recipients_file:
-        recipients_file.write(key + '\n')
-        click.echo('User has been added')
+        recipients_file.write(recipient + '\n')
+        click.echo('Recipient has been added')
 
 
 @user.command()
