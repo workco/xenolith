@@ -24,8 +24,19 @@ def add(recipient):
 
 
 @user.command()
-@click.argument('id')
-def remove(id):
-    if not os.path.exists(SECRET_PATH):
-        return click.echo(
-            'Cannot detect a .secret folder. Run "xenolith init" to initialize xenolith')
+@click.argument('recipient')
+@utils.recipients_file_exists
+def remove(recipient):
+    """Removes a recipient that can unencrypt files.
+
+    - recpient - Public key of the recipient"""
+    with open(SECRET_PATH + RECIPIENTS_FILE_NAME, 'r+') as recipients_file:
+        recipients_list = recipients_file.read().splitlines()
+        if(recipient in recipients_list):
+            recipients_list.remove(recipient)
+            click.echo("Recipient has been removed")
+        else:
+            click.echo("Recipient could not be found in list of users")
+        recipients_file.seek(0)
+        recipients_file.truncate()
+        recipients_file.write('\n'.join(recipients_list))
