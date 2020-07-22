@@ -1,6 +1,6 @@
 # Xenolith
 
-Xenolith is a command-line based tool that allows for files to be encrypted with public keys and accessed by those who have access. With the main component being FiloSottile's [age](https://github.com/FiloSottile/age) library for encryption, Xenolith uses `ssh-rsa`, `ssh-ed25519`, and age's `keygen` keys.
+Xenolith is a command-line based tool that allows for files to be encrypted with public keys and accessed by those who have access. With the main component being FiloSottile's [age](https://github.com/FiloSottile/age) library for encryption, Xenolith uses `ssh-rsa`, `ssh-ed25519`, and age's `keygen` for keys.
 
 # Installation
 
@@ -42,6 +42,7 @@ To get started:
   pip install -r requirements.txt
   source ./venv/bin/activate
   ```
+- Install [age](https://github.com/FiloSottile/age) and [rage](https://github.com/str4d/rage)
 - To test the application locally, run:
   ```
   pip install --editable .
