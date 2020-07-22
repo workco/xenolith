@@ -1,6 +1,7 @@
 
 import click
 import os
+import utils
 import constant as constant
 from constant import SECRET_PATH, RECIPIENTS_FILE_NAME
 
@@ -12,15 +13,12 @@ def file():
 
 @file.command()
 @click.argument('file_name')
+@utils.recipients_file_exists
 def encrypt(file_name):
-    """Encrypts a file assuming that at least one user exists"""
-    if not os.path.exists(SECRET_PATH):
-        return click.echo(
-            'Cannot detect a .secret folder. Run "xenolith init" to initialize xenolith')
-    elif os.stat(SECRET_PATH + RECIPIENTS_FILE_NAME).st_size == 0:
+    """Encrypts a file assuming that at least one user exists."""
+    if os.stat(SECRET_PATH + RECIPIENTS_FILE_NAME).st_size == 0:
         return click.echo(
             'To encrypt a file, at least one user\'s public key must be added using "xenolith key add"')
-
     with open(SECRET_PATH + RECIPIENTS_FILE_NAME, 'r') as recipients_list:
         format_recipients = ''
         for recipient in recipients_list:

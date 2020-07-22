@@ -1,6 +1,7 @@
 import click
 import os
-import constant as constant
+import utils
+import constant
 from constant import SECRET_PATH, RECIPIENTS_FILE_NAME
 
 
@@ -10,11 +11,13 @@ def user():
 
 
 @user.command()
+@utils.secret_folder_exists
 @click.argument('recipient')
 def add(recipient):
-    if not os.path.exists(SECRET_PATH):
-        return click.echo(
-            'Cannot detect a .secret folder. Run "xenolith init" to initialize xenolith')
+    """Adds a recipient that can unencrypt files.
+
+    - recpient - Public key of the recipient"""
+    # TODO: Allow multiple recipients
     with open(SECRET_PATH + RECIPIENTS_FILE_NAME, 'a') as recipients_file:
         recipients_file.write(recipient + '\n')
         click.echo('Recipient has been added')
