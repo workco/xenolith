@@ -11,6 +11,7 @@ def cli():
 
 @cli.command()
 def init():
+    """Initializes xenolith in the current directory"""
     if os.path.exists(SECRET_PATH):
         return click.echo('Xenolith has already been initialized')
     try:
