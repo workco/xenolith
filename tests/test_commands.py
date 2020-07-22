@@ -2,6 +2,7 @@ import shutil
 import os
 import pytest
 import functools
+from constant import SECRET_PATH, RECIPIENTS_FILE_NAME
 from commands.file import encrypt, decrypt
 from commands.main import init
 from commands.user import add, remove
@@ -9,7 +10,6 @@ from click.testing import CliRunner
 
 TEST_PUBLIC_KEY = 'age1vksv3t6antalfj3ekyr75fyuff2g2m38slpeq65v5ru82hfg2v3sngv7t6'
 TEST_PRIVATE_KEY = 'AGE-SECRET-KEY-1964835NDR0GQRDY9LLDM422NWAZR9G05NFNXW6W49TURQ8PQPDGSYGJEL9'
-SECRET_PATH = './.secret'
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -24,18 +24,20 @@ def safe_delete(request):
 
 
 @pytest.fixture
-def init_file():
+def fixture_init_secret():
     run_init = CliRunner().invoke(init)
+    assert ".secret folder created in current directory" in run_init.output
     return run_init
 
 
 @pytest.fixture
-def init_add_user(init_file):
+def fixture_add_user(fixture_init_secret):
     add_user = CliRunner().invoke(add, [TEST_PUBLIC_KEY])
+    assert "Recipient has been added" in add_user.output
     return add_user
 
 
-def test_init(init_file):
+def test_init(fixture_init_secret):
     run_init_exists = CliRunner().invoke(init)
     assert 'Xenolith has already been initialized' in run_init_exists.output
 
@@ -45,12 +47,19 @@ def test_encrypt_no_init():
     assert 'Cannot detect a .secret folder. Run "xenolith init" to initialize xenolith' in run_encrypt.output
 
 
-def test_encrypt_no_user(init_file):
-    encrypt_file = CliRunner().invoke(encrypt, [''])
+def test_encrypt_no_recipients_file(fixture_init_secret):
+    os.remove(SECRET_PATH + RECIPIENTS_FILE_NAME)
+    encrypt_file = CliRunner().invoke(encrypt, ['.env'])
+
+    assert 'Recipients file could not be found' in encrypt_file.output
+
+
+def test_encrypt_no_recipients_added(fixture_init_secret):
+    encrypt_file = CliRunner().invoke(encrypt, ['.env'])
     assert 'To encrypt a file, at least one user\'s public key must be added using "xenolith key add"' in encrypt_file.output
 
 
-def test_encrypt_decrypt(init_add_user, tmp_path):
+def test_encrypt_decrypt(fixture_add_user, tmp_path):
     env = tmp_path / '.env'
     secret_file = tmp_path / 'key.txt'
 
@@ -69,6 +78,34 @@ def test_encrypt_decrypt(init_add_user, tmp_path):
     file_content = open(str(env), 'r').read()
     assert file_content == 'test'
     assert 'File has been decrypted' in decrypt_file.output
+
+
+def test_add_user(fixture_init_secret, tmp_path):
+    CliRunner().invoke(add, [TEST_PUBLIC_KEY])
+
+    with open(SECRET_PATH + RECIPIENTS_FILE_NAME) as recipient_file:
+        # Last line is always an empty string
+        recipient_list = recipient_file.read().split('\n')[:-1]
+        assert len(recipient_list) == 1
+        assert TEST_PUBLIC_KEY == recipient_list[0]
+
+
+def test_remove_user(fixture_add_user, tmp_path):
+    remove_user = CliRunner().invoke(remove, [TEST_PUBLIC_KEY])
+
+    with open(SECRET_PATH + RECIPIENTS_FILE_NAME) as recipient_file:
+        # Last line is always an empty string
+        recipient_list = recipient_file.read().split('\n')
+        assert recipient_list[0] == ''
+        assert len(recipient_list) == 1
+
+    assert "Recipient has been removed" in remove_user.output
+
+
+def test_remove_nonexistant_user(fixture_add_user, tmp_path):
+    remove_user = CliRunner().invoke(remove, ["AKey"])
+
+    assert "Recipient could not be found in list of users" in remove_user.output
 
 
 def test_decrypt_path_not_found():
