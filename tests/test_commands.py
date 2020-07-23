@@ -1,10 +1,11 @@
 import shutil
 import os
 import pytest
+import json
 import functools
-from constant import SECRET_PATH, RECIPIENTS_FILE_NAME
+from constant import SECRET_PATH, RECIPIENTS_FILE_NAME, CONFIG_FILE_NAME
 from commands.file import encrypt, decrypt
-from commands.main import init
+from commands.main import init, encryption
 from commands.user import add, remove
 from click.testing import CliRunner
 
@@ -25,7 +26,8 @@ def safe_delete(request):
 
 @pytest.fixture
 def fixture_init_secret():
-    run_init = CliRunner().invoke(init)
+    run_init = CliRunner().invoke(init, ['-e', 'age'])
+    #run_init = CliRunner().invoke(init, ['-e', 'rage'])
     assert ".secret folder created in current directory" in run_init.output
     return run_init
 
@@ -112,3 +114,12 @@ def test_decrypt_path_not_found():
     decrypt_file = CliRunner().invoke(
         decrypt, ["fakefile.txt", "fakefile.age"])
     assert 'Path \'fakefile.txt\' does not exist' in decrypt_file.output
+
+
+def test_encryption_change(fixture_init_secret, tmp_path):
+    encryption_change = CliRunner().invoke(encryption, ['rage'])
+    assert "Updated encryption library to rage" in encryption_change.output
+
+    with open(SECRET_PATH + CONFIG_FILE_NAME) as config_file:
+        data = json.load(config_file)
+        assert data['encryption'] == 'rage'

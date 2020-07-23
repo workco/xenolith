@@ -16,7 +16,7 @@ def user():
 def add(recipient):
     """Adds a recipient that can unencrypt files.
 
-    - recpient - Public key of the recipient"""
+    recpient - Public key of the recipient"""
     # TODO: Allow multiple recipients
     with open(SECRET_PATH + RECIPIENTS_FILE_NAME, 'a') as recipients_file:
         recipients_file.write(recipient + '\n')
@@ -29,7 +29,7 @@ def add(recipient):
 def remove(recipient):
     """Removes a recipient that can unencrypt files.
 
-    - recpient - Public key of the recipient"""
+    recpient - Public key of the recipient"""
     with open(SECRET_PATH + RECIPIENTS_FILE_NAME, 'r+') as recipients_file:
         recipients_list = recipients_file.read().splitlines()
         if(recipient in recipients_list):

@@ -1,8 +1,10 @@
 # Xenolith
 
-Xenolith is a command-line based tool that allows for files to be encrypted with public keys and accessed by those who have access. With the main component being FiloSottile's [age](https://github.com/FiloSottile/age) library for encryption, Xenolith uses `ssh-rsa`, `ssh-ed25519`, and age's `keygen` for keys.
+Xenolith is a command-line based tool that allows for files to be encrypted with public keys and accessed by those who have access. With the main component being FiloSottile's [age](https://github.com/FiloSottile/age) and str4d's [rage](https://github.com/str4d/rage) library for encryption, Xenolith uses `ssh-rsa`, `ssh-ed25519`, and age's `keygen` for keys.
 
 # Installation
+
+- Start by installing [age](https://github.com/FiloSottile/age) and [rage](https://github.com/str4d/rage)
 
 # Usage
 
