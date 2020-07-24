@@ -64,7 +64,6 @@ def test_encrypt_no_recipients_added(fixture_init_secret):
 def test_encrypt_decrypt(fixture_add_user, tmp_path):
     env = tmp_path / '.env'
     secret_file = tmp_path / 'key.txt'
-
     secret_file.write_text(TEST_PRIVATE_KEY)
     env.write_text('test')
 
@@ -77,7 +76,7 @@ def test_encrypt_decrypt(fixture_add_user, tmp_path):
 
     decrypt_file = CliRunner().invoke(
         decrypt, [str(secret_file), (str(env) + '.age')])
-    file_content = open(str(env), 'r').read()
+    file_content = open(env, 'r').read()
     assert file_content == 'test'
     assert 'File has been decrypted' in decrypt_file.output
 
