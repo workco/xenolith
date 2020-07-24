@@ -46,4 +46,6 @@ def encryption_library():
     config = open(SECRET_PATH + CONFIG_FILE_NAME, 'r')
     encryption = json.load(config)['encryption']
     config.close()
+    if encryption != 'age' and encryption != 'rage':
+        return "Invalid"
     return encryption
