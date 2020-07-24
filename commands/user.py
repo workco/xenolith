@@ -19,7 +19,8 @@ def add(recipient):
     recpient - Public key of the recipient"""
     # TODO: Allow multiple recipients
     with open(SECRET_PATH + RECIPIENTS_FILE_NAME, 'a') as recipients_file:
-        recipients_file.write(recipient + '\n')
+        recipients_file.write(recipient)
+        recipients_file.write('\n')
         click.echo('Recipient has been added')
 
 

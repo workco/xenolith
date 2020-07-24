@@ -32,14 +32,17 @@ def encrypt(file_name):
         try:
             if utils.encryption_library().lower() == 'invalid':
                 raise ValueError('Invalid encryption type specified in config')
+            # Remove .age file if it exists already
+            if os.path.exists(format_file_name_encrypted):
+                os.remove(format_file_name_encrypted)
             format_command = '{} {} -o {} {}'.format(
                 utils.encryption_library(), format_recipients, format_file_name_encrypted, file_name)
             pipe = subprocess.Popen(format_command, shell=True)
             pipe.wait(timeout=5)
             if int(pipe.returncode) != 0:
                 output, error = pipe.communicate()
-                raise Exception(
-                    'Decryption failed - {}'.format(error.decode('utf-8')))
+                raise ValueError(
+                    'Encryption failed - {}'.format(error.decode('utf-8')))
             click.echo('File ' + format_file_name_encrypted +
                        ' has been encrypted')
         except Exception as e:
