@@ -1,6 +1,6 @@
 # Xenolith [![Run tests](https://github.com/workco/xenolith/workflows/Run%20tests/badge.svg?branch=master)](https://github.com/workco/xenolith/actions)
 
-Xenolith is a command-line based tool that allows for files to be encrypted with public keys and decrypted by users who have . With the main components being FiloSottile's [age](https://github.com/FiloSottile/age) and str4d's [rage](https://github.com/str4d/rage) library for encryption, Xenolith uses `ssh-rsa`, `ssh-ed25519`, and age/rages's `keygen` as keys.
+Xenolith is a command-line based tool that allows for files to be encrypted with public keys and decrypted by users who have access. With the main components being FiloSottile's [age](https://github.com/FiloSottile/age) and str4d's [rage](https://github.com/str4d/rage) library for encryption, Xenolith uses `ssh-rsa`, `ssh-ed25519`, and age/rages's `keygen` as keys.
 
 # Installation
 
@@ -8,7 +8,7 @@ Xenolith is a command-line based tool that allows for files to be encrypted with
 
 - Install [age](https://github.com/FiloSottile/age) or [rage](https://github.com/str4d/rage)
 
-- Use [Python 3.8.4](https://www.python.org/downloads/release/python-384/) or higher
+- Preferably use [Python 3.8.4](https://www.python.org/downloads/release/python-384/) or higher
 
 ## Installation
 
@@ -50,7 +50,7 @@ Removes a public key from the list of recipients. The key must match one of the 
 With a given set of recipients, encrypts the given file and appends an .age suffix at the end.
 
 
-- xenolith decrypt [key_file] [file_path]
+- xenolith decrypt [key_path] [file_path]
 With a given key and file, decrypts a file that have been previously encrypted.
 ```
 
@@ -59,6 +59,7 @@ With a given key and file, decrypts a file that have been previously encrypted.
 To get started:
 
 - Download [Python 3.8.4](https://www.python.org/downloads/release/python-384/)
+- Install [age](https://github.com/FiloSottile/age) and [rage](https://github.com/str4d/rage)
 - Set up [Python's Virtual Environment](https://docs.python.org/3/library/venv.html)
   ```
   python3 -m venv venv
@@ -68,7 +69,6 @@ To get started:
   pip install -r requirements.txt
   source ./venv/bin/activate
   ```
-- Install [age](https://github.com/FiloSottile/age) and [rage](https://github.com/str4d/rage)
 - To test the application locally, run:
   ```
   pip install --editable .
